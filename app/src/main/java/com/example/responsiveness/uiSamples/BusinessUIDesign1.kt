@@ -3,7 +3,6 @@ package com.example.responsiveness.uiSamples
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -27,10 +26,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.outlined.TrendingUp
 import androidx.compose.material.icons.filled.ArrowOutward
-import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
@@ -67,8 +64,22 @@ import com.example.responsiveness.ui.theme.BlackBarColor
 import com.example.responsiveness.ui.theme.PinkBarColor
 
 
-//@Preview(showSystemUi = true)
-//@Preview(device = "spec:width=360dp,height=800dp,dpi=320", showSystemUi = true)
+@Preview(showSystemUi = true, name = "Width:392.dp,Height:850.dp")
+@Preview(
+    device = "spec:width=360dp,height=800dp,dpi=360",
+    showSystemUi = true,
+    name = "Width:360.dp,Height:800.dp"
+)
+@Preview(
+    device = "spec:width=340dp,height=760dp,dpi=320",
+    showSystemUi = true,
+    name = "Width:340,Height:760.dp"
+)
+@Preview(
+    device = "spec:width=320dp,height=720dp,dpi=320",
+    showSystemUi = true,
+    name = "Width:320,Height:720.dp"
+)
 @Composable
 fun BusinessUIDesign1Screen() {
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
@@ -77,6 +88,7 @@ fun BusinessUIDesign1Screen() {
             val maxHeight = this@BoxWithConstraints.maxHeight
             val horizontalPadding = if (maxWidth <= 365.dp) 18.dp else 24.dp
             val verticalPadding = if (maxHeight <= 800.dp) 30.dp else 36.dp
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -90,9 +102,8 @@ fun BusinessUIDesign1Screen() {
                             )
                         )
                     )
-//                    .verticalScroll(state = rememberScrollState())
-                    .padding(bottom = verticalPadding/2)
-                ,
+                    .verticalScroll(state = rememberScrollState())
+                    .padding(bottom = verticalPadding / 2),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalAlignment = Alignment.Start
             ) {
@@ -126,7 +137,7 @@ fun BusinessUIDesign1Screen() {
                         bottom = verticalPadding / 2,
                         start = horizontalPadding
                     ),
-                    fontSize = 28.sp,
+                    fontSize = (maxWidth*0.084f).toSp(),
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold
                 )
@@ -137,7 +148,7 @@ fun BusinessUIDesign1Screen() {
                         start = horizontalPadding,
                         bottom = verticalPadding
                     ),
-                    fontSize = 14.sp,
+                    fontSize = (maxWidth*0.042f).toSp(),
                     fontWeight = FontWeight.Normal,
                     lineHeight = 22.sp
                 )
@@ -157,20 +168,31 @@ fun BusinessUIDesign1Screen() {
                         }
                     },
                 ) { modifier ->
+                    val photoSize = when {
+                        maxWidth >= 390.dp -> 50.dp
+                        maxWidth in 360.dp..389.dp -> 46.dp
+                        else -> 42.dp
+                    }
                     Box(
                         modifier = modifier
-                            .width(120.dp)
+                            .width((photoSize * 3) * 0.8f)
                             .wrapContentHeight()
                             .background(Color.Transparent)
                     ) {
                         BoxImage(
                             alignment = Alignment.CenterEnd,
-                            imageResourceId = R.drawable.female_1
+                            imageResourceId = R.drawable.female_1,
+                            photoSize = photoSize
                         )
-                        BoxImage(alignment = Alignment.Center, imageResourceId = R.drawable.male_1)
+                        BoxImage(
+                            alignment = Alignment.Center,
+                            imageResourceId = R.drawable.male_1,
+                            photoSize = photoSize
+                        )
                         BoxImage(
                             alignment = Alignment.CenterStart,
-                            imageResourceId = R.drawable.female_2
+                            imageResourceId = R.drawable.female_2,
+                            photoSize = photoSize
                         )
                     }
                 }
@@ -180,6 +202,11 @@ fun BusinessUIDesign1Screen() {
                     bottomText = "45M" as CharSequence
                 ) { modifier ->
                     val array = floatArrayOf(7.5f, 9f, 4.5f, 6.5f, 3f, 8f, 6f, 10f, 3.5f, 10f)
+                    val barWidth = when {
+                        maxWidth >= 390.dp -> 10.dp
+                        maxWidth in 360.dp..389.dp -> 9.dp
+                        else -> 8.dp
+                    }
                     Row(
                         modifier = modifier
                             .padding(10.dp)
@@ -190,8 +217,8 @@ fun BusinessUIDesign1Screen() {
                         array.forEachIndexed { index, value ->
                             Box(
                                 modifier = Modifier
-                                    .width(10.dp)
-                                    .height(value.times(3.6).dp)
+                                    .width(barWidth)
+                                    .height(value.times(3.6f * (barWidth.value / 10)).dp)
                                     .background(
                                         color = if (index % 2 == 0) PinkBarColor else BlackBarColor,
                                         shape = CircleShape
@@ -202,10 +229,10 @@ fun BusinessUIDesign1Screen() {
                 }
 
                 BusinessItemsCard(
-                    horizontalPadding=horizontalPadding,
+                    horizontalPadding = horizontalPadding,
                     topText = "Inventing the future \nof design",
                     bottomText = "2.5x"
-                ) {modifier ->
+                ) { modifier ->
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.TrendingUp,
                         contentDescription = "Trending Up",
@@ -221,9 +248,16 @@ fun BusinessUIDesign1Screen() {
 }
 
 @Composable
-fun BoxScope.BoxImage(alignment: Alignment, @DrawableRes imageResourceId: Int) {
+fun BoxScope.BoxImage(
+    alignment: Alignment,
+    @DrawableRes imageResourceId: Int,
+    photoSize: Dp = 50.dp
+) {
     Box(
-        modifier = Modifier.size(50.dp).background(color = Color.White, shape = CircleShape).align(alignment),
+        modifier = Modifier
+            .size(photoSize)
+            .background(color = Color.White, shape = CircleShape)
+            .align(alignment),
         contentAlignment = Alignment.Center
     ) {
         Image(
@@ -232,7 +266,7 @@ fun BoxScope.BoxImage(alignment: Alignment, @DrawableRes imageResourceId: Int) {
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .background(color = Color.Transparent)
-                .size(45.dp)
+                .size(photoSize - 5.dp)
                 .clip(CircleShape)
         )
     }
@@ -260,124 +294,66 @@ fun BusinessItemsCard(
     horizontalPadding: Dp,
     topText: String,
     bottomText: CharSequence,
-    content: @Composable (modifier: Modifier) -> Unit
+    content: @Composable (modifier: Modifier) -> Unit,
 ) {
-    Box(
-        modifier = Modifier
-            .padding(horizontal = 10.dp)
-            .fillMaxWidth()
-            .aspectRatio(5 / 2.8f)
-            .background(color = Color.White.copy(0.4f), shape = RoundedCornerShape(18.dp))
-            .padding(
-                start = horizontalPadding,
-                end = horizontalPadding / 3,
-                top = horizontalPadding / 3,
-                bottom = horizontalPadding
-            )
-    ) {
-        Text(
-            text = topText,
-            lineHeight = 20.sp,
-            fontSize = 17.sp,
-            color = Color.Black,
-            fontWeight = FontWeight.W400,
-            modifier = Modifier
-                .padding(vertical = 12.dp)
-                .align(alignment = Alignment.TopStart)
-        )
-        Box(
-            modifier = Modifier
-                .size(72.dp)
-                .background(color = Color.White, shape = CircleShape)
-                .align(alignment = Alignment.TopEnd)
-        ) {
-            Icon(
-                imageVector = Icons.Default.ArrowOutward,
-                contentDescription = "forward arrow icon",
-                modifier = Modifier.align(alignment = Alignment.Center)
-            )
-        }
-        Text(
-            text = bottomText as? AnnotatedString ?: AnnotatedString(bottomText.toString()),
-            lineHeight = 18.sp,
-            color = Color.Black,
-            fontSize = 58.sp,
-            fontWeight = FontWeight.SemiBold,
-            fontFamily = FontFamily.SansSerif,
-            modifier = Modifier.align(alignment = Alignment.BottomStart)
-        )
-        content(Modifier.align(alignment = Alignment.BottomEnd))
-    }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun AtlasWelcomeScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            // 1. Use the same gradient background for a seamless feel.
-            .background(
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        AtlasColor2,
-                        AtlasColor1,
-                        AtlasColor3
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        with(LocalDensity.current) {
+            val maxWidth = this@BoxWithConstraints.maxWidth
+            val iconButtonSize = when {
+                maxWidth >= 390.dp -> 72.dp
+                maxWidth in 360.dp..389.dp -> 66.dp
+                else -> 60.dp
+            }
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .fillMaxWidth()
+                    .aspectRatio(5 / 2.8f)
+                    .background(color = Color.White.copy(0.4f), shape = RoundedCornerShape(18.dp))
+                    .padding(
+                        start = horizontalPadding,
+                        end = horizontalPadding / 3,
+                        top = horizontalPadding / 3,
+                        bottom = horizontalPadding
                     )
+            ) {
+                Text(
+                    text = topText,
+                    lineHeight = 20.sp,
+                    fontSize = maxWidth.times(0.044f).coerceIn(12.dp, 24.dp).toSp(),
+                    color = Color.Black,
+                    fontWeight = FontWeight.W400,
+                    modifier = Modifier
+                        .padding(vertical = 12.dp)
+                        .align(alignment = Alignment.TopStart)
                 )
-            )
-            .statusBarsPadding()
-            // Add padding to keep content away from the edges
-            .padding(36.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        // A Spacer to push content down a bit
-        Spacer(modifier = Modifier.weight(1f))
-//
-//        // 2. The main visual element: a subtle world map icon.
-//        // It's large but has low alpha to not be distracting.
-        Icon(
-            imageVector = Icons.Default.Language, // You'll need to add this asset
-            contentDescription = "World Map",
-            modifier = Modifier.size(200.dp),
-            tint = Color.White.copy(alpha = 0.3f)
-        )
-//
-        Spacer(modifier = Modifier.height(24.dp))
-//
-//        // 3. A bold, welcoming title.
-        Text(
-            text = "Welcome to Atlas",
-            fontSize = 40.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.SansSerif,
-            color = Color.Black
-        )
-
-        Text(
-            text = "Your Global Business Dashboard",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Normal,
-            color = Color.Black.copy(alpha = 0.8f)
-        )
-//
-//        // Spacer to push the call-to-action to the bottom
-        Spacer(modifier = Modifier.weight(1.5f))
-
-        // 4. A clear call-to-action guiding the user to swipe.
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                contentDescription = "Swipe left",
-                tint = Color.Black.copy(alpha = 0.6f)
-            )
-            Text(
-                text = "Slide to explore",
-                fontSize = 14.sp,
-                color = Color.Black.copy(alpha = 0.6f)
-            )
+                Box(
+                    modifier = Modifier
+                        .size(iconButtonSize)
+                        .background(color = Color.White, shape = CircleShape)
+                        .align(alignment = Alignment.TopEnd)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowOutward,
+                        contentDescription = "forward arrow icon",
+                        modifier = Modifier.align(alignment = Alignment.Center)
+                    )
+                }
+                Text(
+                    text = bottomText as? AnnotatedString ?: AnnotatedString(bottomText.toString()),
+                    lineHeight = 18.sp,
+                    color = Color.Black,
+                    fontSize = maxWidth.times(0.15f).coerceIn(40.dp, 75.dp).toSp(),
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = FontFamily.SansSerif,
+                    modifier = Modifier.align(alignment = Alignment.BottomStart)
+                )
+                content(
+                    Modifier.align(alignment = Alignment.BottomEnd)
+                )
+            }
         }
-        Spacer(modifier = Modifier.height(24.dp))
     }
 }
+
+
