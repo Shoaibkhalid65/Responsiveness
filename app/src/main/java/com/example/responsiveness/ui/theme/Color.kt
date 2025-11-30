@@ -22,3 +22,10 @@ val CardBackgroundColor=Color(0xFFe6d8ff)
 val PinkBarColor=Color(0xFFed8e8b)
 val BlackBarColor=Color(0xFF1c1922)
 
+val BrownColor=Color(0xFF313131)
+val LightPinkColor=Color(0xFFecdbdf)
+val LightBlueColor=Color(0xFFdce1eb)
+val LightestBlueColor=Color(0xFFedf0f8)
+val GreenTextColor=Color(0xFF36b361)
+val RedTextColor=Color(0xFFbf2026)
+
