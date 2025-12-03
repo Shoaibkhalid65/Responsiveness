@@ -1,4 +1,4 @@
-# 📱 Responsive UI in Android — Jetpack Compose
+# 📱 Responsive UI in Android — Jetpack Compose.
 
 ### Ensuring Consistent UI Across All Android Phone Devices
 
