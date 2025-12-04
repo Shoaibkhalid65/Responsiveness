@@ -150,6 +150,7 @@ fun RowScope.RowItem(title: String, text: String) {
             text = title,
             color = Color.White.copy(0.65f)
         )
+
         Text(
             text = text,
             color = Color.White,
